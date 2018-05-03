@@ -2,8 +2,8 @@
 <head>
 <title>Tsugi Store Parent Site</title>
 <style>
-body { 
-    background: url(images/bgbg.jpg) no-repeat center center fixed; 
+body {
+    background: url(images/bgbg.jpg) no-repeat center center fixed;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -14,17 +14,21 @@ body {
     line-height: 1.42857143;
     color: #EEEEEE;
 }
+a {
+    color: #A4DEEE;
+    text-decoration: none;
+}
 </style>
 <body>
 <a href="https://github.com/tsugiproject/tsugi-parent" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; height:120px; width:120px;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
 <h1>Tsugi Store Parent Site</h1>
-<p> In general, a Tsugi store and apps will be at the <code>/tsugi</code>
+<p> In general, a Tsugi store and apps will be installed at the <code>/tsugi</code>
 path, leaving the root path
 to be a web site where the store owner can put up any site they like with documentation,
 instructions, etc.  The Tsugi parent site can use any technology but the two most
 common approaches are static HTML possibly mixed in with PHP.
 </p>
-<p>  You can see this in action by comparing 
+<p>  You can see this in action by comparing
 <a href="https://www.tsugicloud.org" target="_blank">https://www.tsugicloud.org</a>
 (a static html site)
 with
@@ -57,9 +61,17 @@ $CFG-&gt;servicename = 'MyStore';
 $CFG-&gt;apphome = 'https://www.mystore.edu';
 </pre>
 You can see this in action on
-<a href="https://www.tsugicloud.org/tsugi/store/" target="_blank">tsugicloud.org</a> - the 
+<a href="https://www.tsugicloud.org/tsugi/store/" target="_blank">tsugicloud.org</a> - the
 text and destination of the upper left link go back to the parent site.  The <code>apphome</code>
 value does not have to be on the same web server as <code>/tsugi</code>.
+</p>
+<p>
+When you first go to the <code>/tsugi</code> page, you will not see an "Admin" link.  The link
+is hidden by default until you manually navigate to <a href="/tsugi/admin">/tsugi/admin</a>
+and enter the login password successfully.  At that point, Tsugi sets a cookie and your browser
+starts seeing the "Admin" link.   This is to keep from showing 99.9% of your users an Admin link
+they cannot use on every screen.  Is the Tsugi site is in "DEVELOPER" mode
+(for developers on their desktop), the Admin link appears all the time.
 </p>
 <h2>Making a Koseu Site</h2>
 <p>
@@ -67,7 +79,7 @@ With some work, you can turn this parent site into a standalone LMS using Koseu.
 Koseu is a Tsugi-based LMS/MOOC platform that is used to build the content and site for:
 <ul>
 <li><p><a href="https://www.py4e.com/" target="_blank">Python For Everybody</a></p></li>
-<li><p><a href="https://www.openochem.org/" target="_blank">Open Organic Chemistry</a></p></li>
+<li><p><a href="https://openochem.org/" target="_blank">Open Organic Chemistry</a></p></li>
 <li><p><a href="https://www.wd4e.com/" target="_blank">Web Design For Everybody</a></p></li>
 <li><p><a href="https://www.wa4e.com/" target="_blank">Web Applications For Everybody</a></p></li>
 </ul>
