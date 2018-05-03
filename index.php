@@ -49,10 +49,10 @@ folks to login and apply for keys, or look at the cool tools on your site,
 you will need to embed various links into Tsugi in the parent web site.
 <ul>
 <li><p><a href="/tsugi">/tsugi</a> Will link to the top page in Tsugi.</p></li>
-<li><p><a href="/tsugi/admin">/tsugi/store</a> Will link to app store in Tsugi.</p></li>
+<li><p><a href="/tsugi/store">/tsugi/store</a> Will link to app store in Tsugi.</p></li>
 <li><p><a href="/tsugi/admin">/tsugi/admin</a> Will link to the admin page in Tsugi.</p></li>
 <li><p><a href="/tsugi/login">/tsugi/login</a> Will link to the Tsugi login page (assuming Google login is setup).</p></li>
-<li><p><a href="/tsugi/login">/tsugi/logout</a> Will log the user out.</p></li>
+<li><p><a href="/tsugi/logout">/tsugi/logout</a> Will log the user out.</p></li>
 </ul>
 These pages will have a links at the top and the left most navigation should link back to this
 page.  This is set in the <code>tsugi/config.php</code> file.
