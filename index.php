@@ -50,7 +50,9 @@ you will need to embed various links into Tsugi in the parent web site.
 <ul>
 <li><p><a href="/tsugi">/tsugi</a> Will link to the top page in Tsugi.</p></li>
 <li><p><a href="/tsugi/store">/tsugi/store</a> Will link to app store in Tsugi.</p></li>
-<li><p><a href="/tsugi/admin">/tsugi/admin</a> Will link to the admin page in Tsugi.</p></li>
+<li><p><a href="/tsugi/admin">/tsugi/admin</a> Will link to the admin page in Tsugi.
+You may decide not to expose this link to end users and just share it with your administrators.
+</p></li>
 <li><p><a href="/tsugi/login">/tsugi/login</a> Will link to the Tsugi login page (assuming Google login is setup).</p></li>
 <li><p><a href="/tsugi/logout">/tsugi/logout</a> Will log the user out.</p></li>
 </ul>
