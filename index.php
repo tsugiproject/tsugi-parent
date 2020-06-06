@@ -81,8 +81,9 @@ With some work, you can turn this parent site into a standalone LMS using Koseu.
 Koseu is a Tsugi-based LMS/MOOC platform that is used to build the content and site for:
 <ul>
 <li><p><a href="https://www.py4e.com/" target="_blank">Python For Everybody</a></p></li>
-<li><p><a href="https://openochem.org/" target="_blank">Open Organic Chemistry</a></p></li>
+<li><p><a href="https://www.dj4e.com/" target="_blank">Django For Everybody</a></p></li>
 <li><p><a href="https://www.wd4e.com/" target="_blank">Web Design For Everybody</a></p></li>
+<li><p><a href="https://openochem.org/" target="_blank">Open Organic Chemistry</a></p></li>
 <li><p><a href="https://www.wa4e.com/" target="_blank">Web Applications For Everybody</a></p></li>
 </ul>
 Please join the <a href="https://www.tsugi.org/" target="_new">Tsugi Developers List</a> if you
