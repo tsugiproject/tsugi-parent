@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Tsugi Store Parent Site</title>
+<title>Tsugi Parent Site</title>
 <style>
 body {
     background: url(images/bgbg.jpg) no-repeat center center fixed;
@@ -21,7 +21,7 @@ a {
 </style>
 <body>
 <a href="https://github.com/tsugiproject/tsugi-parent" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; height:120px; width:120px;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png" alt="Fork me on GitHub"></a>
-<h1>Tsugi Store Parent Site</h1>
+<h1>Tsugi Parent Site</h1>
 <p> In general, a Tsugi store and apps will be installed at the <code>/tsugi</code>
 path, leaving the root path
 to be a web site where the store owner can put up any site they like with documentation,
