@@ -21,8 +21,8 @@ into your LMS using Content-Item / Deep-Linking for everyone and this page is
 merely documentation.  You could even make the top page a single redirect to a
 completely different web page and host this parent site using any technology you like.
 
-Instructions for Installing Tsugi
----------------------------------
+Instructions for Installing a Tsugi Server Environment
+------------------------------------------------------
 
 To install a Tsugi - see the following repositories
 

@@ -48,13 +48,13 @@ If you want this to be a site (like TsugiCloud) that allows login, and encourage
 folks to login and apply for keys, or look at the cool tools on your site,
 you will need to embed various links into Tsugi in the parent web site.
 <ul>
-<li><p><a href="/tsugi">/tsugi</a> Will link to the top page in Tsugi.</p></li>
-<li><p><a href="/tsugi/store">/tsugi/store</a> Will link to app store in Tsugi.</p></li>
-<li><p><a href="/tsugi/admin">/tsugi/admin</a> Will link to the admin page in Tsugi.
+<li><p><a href="tsugi">tsugi</a> Will link to the top page in Tsugi.</p></li>
+<li><p><a href="tsugi/store">tsugi/store</a> Will link to app store in Tsugi.</p></li>
+<li><p><a href="tsugi/admin">tsugi/admin</a> Will link to the admin page in Tsugi.
 You may decide not to expose this link to end users and just share it with your administrators.
 </p></li>
-<li><p><a href="/tsugi/login">/tsugi/login</a> Will link to the Tsugi login page (assuming Google login is setup).</p></li>
-<li><p><a href="/tsugi/logout">/tsugi/logout</a> Will log the user out.</p></li>
+<li><p><a href="tsugi/login">tsugi/login</a> Will link to the Tsugi login page (assuming Google login is setup).</p></li>
+<li><p><a href="tsugi/logout">tsugi/logout</a> Will log the user out.</p></li>
 </ul>
 These pages will have a links at the top and the left most navigation should link back to this
 page.  This is set in the <code>tsugi/config.php</code> file.
@@ -69,7 +69,7 @@ value does not have to be on the same web server as <code>/tsugi</code>.
 </p>
 <p>
 When you first go to the <code>/tsugi</code> page, you will not see an "Admin" link.  The link
-is hidden by default until you manually navigate to <a href="/tsugi/admin">/tsugi/admin</a>
+is hidden by default until you manually navigate to <a href="tsugi/admin">tsugi/admin</a>
 and enter the login password successfully.  At that point, Tsugi sets a cookie and your browser
 starts seeing the "Admin" link.   This is to keep from showing 99.9% of your users an Admin link
 they cannot use on every screen.  Is the Tsugi site is in "DEVELOPER" mode
