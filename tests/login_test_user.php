@@ -26,7 +26,48 @@ if (!$isLocalhost && !$testEnvAllowed) {
 
 // Load Tsugi
 define('COOKIE_SESSION', true);
-require_once __DIR__ . '/../tsugi/config.php';
+
+// Determine base directory
+$baseDir = null;
+
+// Method 1: Check environment variable (for CLI or when set in web server config)
+$baseDir = getenv('TEST_BASE_DIR');
+if (!empty($baseDir)) {
+    $baseDir = realpath($baseDir);
+}
+
+// Method 2: Detect from request URI when accessed via HTTP
+if (empty($baseDir) && isset($_SERVER['REQUEST_URI'])) {
+    // Extract project name from URL (e.g., /py4e/tests/login_test_user.php -> py4e)
+    $uri = $_SERVER['REQUEST_URI'];
+    if (preg_match('#^/([^/]+)/tests/#', $uri, $matches)) {
+        $projectName = $matches[1];
+        // Try common locations
+        $possiblePaths = [
+            '/Users/csev/htdocs/' . $projectName,
+            dirname(dirname($_SERVER['DOCUMENT_ROOT'])) . '/' . $projectName,
+        ];
+        foreach ($possiblePaths as $path) {
+            if (file_exists($path . '/tsugi/config.php')) {
+                $baseDir = realpath($path);
+                break;
+            }
+        }
+    }
+}
+
+// Method 3: Fall back to __DIR__ relative path (when file is in correct project's tests/ folder)
+if (empty($baseDir)) {
+    $baseDir = realpath(__DIR__ . '/..');
+}
+
+// Load config from base directory's tsugi folder
+$configPath = $baseDir . '/tsugi/config.php';
+if (!file_exists($configPath)) {
+    http_response_code(500);
+    die("Error: Config file not found at: $configPath\nBase directory: $baseDir\nMake sure this file is in the correct project's tests/ directory.\n");
+}
+require_once $configPath;
 
 use \Tsugi\Core\LTIX;
 use \Tsugi\Util\U;
@@ -59,81 +100,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Display name is required';
     } else if (empty($password)) {
         $error = 'Password is required';
-    } else if ($password !== $CFG->adminpw) {
-        $error = 'Invalid password. Password must match admin password from config.php';
     } else {
-        // Password matches admin password - create/update user
+        // Log password comparison for debugging
+        $adminPwFromConfig = $CFG->adminpw ?? '(not set)';
+        echo "🔐 Password check:\n";
+        echo "   Submitted password: '" . $password . "' (length: " . strlen($password) . ")\n";
+        echo "   Admin password from config: '" . $adminPwFromConfig . "' (length: " . strlen($adminPwFromConfig) . ")\n";
+        echo "   Config file: $configPath\n";
         
-        // Generate user key and SHA256
-        $user_key = 'test_' . md5($email . time());
-        $userSHA = hash('sha256', $user_key);
-        
-        // Get Google OAuth key from lti_key table (MUST be 'google.com' key)
-        // This must exist - no fallbacks allowed
-        $key_stmt = $PDOX->queryDie(
-            "SELECT key_id, key_key, secret FROM {$CFG->dbprefix}lti_key 
-             WHERE key_key = 'google.com' LIMIT 1"
-        );
-        $key_row = $key_stmt->fetch(\PDO::FETCH_ASSOC);
-        
-        if (!$key_row) {
-            die('Error: No key found with key_key = "google.com". This key must exist in the lti_key table.');
-        }
-        
-        $key_id = $key_row['key_id'] + 0;
-        $google_key_key = $key_row['key_key'];
-        $google_secret = $key_row['secret'];
-        
-        if (empty($google_secret)) {
-            die('Error: Google key found but secret is empty. The google.com key must have a secret.');
-        }
-        
-        // Check if test user already exists
-        $stmt = $PDOX->queryDie(
-            "SELECT user_id, user_key FROM {$CFG->dbprefix}lti_user WHERE email = :EMAIL LIMIT 1",
-            array(':EMAIL' => $email)
-        );
-        $user_row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        
-        if ($user_row) {
-            $user_id = $user_row['user_id'] + 0;
-            $user_key = $user_row['user_key'];
-            
-            // Update user info and login time
-            $PDOX->queryDie(
-                "UPDATE {$CFG->dbprefix}lti_user 
-                 SET displayname = :DN, login_at = NOW(), ipaddr = :IP 
-                 WHERE user_id = :ID",
-                array(
-                    ':DN' => $displayname,
-                    ':ID' => $user_id,
-                    ':IP' => U::get($_SERVER, 'REMOTE_ADDR', '127.0.0.1')
-                )
-            );
+        if ($password !== $CFG->adminpw) {
+            $error = 'Invalid password. Password must match admin password from config.php';
         } else {
-            // Create new test user
-            $stmt = $PDOX->queryReturnError(
-                "INSERT INTO {$CFG->dbprefix}lti_user
-                (user_sha256, user_key, key_id, email, displayname, created_at, updated_at, login_at, ipaddr) ".
-                "VALUES ( :SHA, :UKEY, :KEY, :EMAIL, :DN, NOW(), NOW(), NOW(), :IP )",
-                array(
-                    ':SHA' => $userSHA,
-                    ':UKEY' => $user_key,
-                    ':KEY' => $key_id,
-                    ':EMAIL' => $email,
-                    ':DN' => $displayname,
-                    ':IP' => U::get($_SERVER, 'REMOTE_ADDR', '127.0.0.1')
-                )
-            );
+            echo "✓ Password matches!\n";
+            // Password matches admin password - create/update user
             
-            if (!$stmt->success) {
-                $error = 'Error creating test user: ' . json_encode($stmt->errorInfo);
-            } else {
-                $user_id = $PDOX->lastInsertId();
+            // Generate user key and SHA256
+            $user_key = 'test_' . md5($email . time());
+            $userSHA = hash('sha256', $user_key);
+            
+            // Get Google OAuth key from lti_key table (MUST be 'google.com' key)
+            // This must exist - no fallbacks allowed
+            $key_stmt = $PDOX->queryDie(
+                "SELECT key_id, key_key, secret FROM {$CFG->dbprefix}lti_key 
+                 WHERE key_key = 'google.com' LIMIT 1"
+            );
+            $key_row = $key_stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            if (!$key_row) {
+                die('Error: No key found with key_key = "google.com". This key must exist in the lti_key table.');
             }
-        }
-        
-        if (!$error && isset($user_id)) {
+            
+            $key_id = $key_row['key_id'] + 0;
+            $google_key_key = $key_row['key_key'];
+            $google_secret = $key_row['secret'];
+            
+            if (empty($google_secret)) {
+                die('Error: Google key found but secret is empty. The google.com key must have a secret.');
+            }
+            
+            // Check if test user already exists
+            $stmt = $PDOX->queryDie(
+                "SELECT user_id, user_key FROM {$CFG->dbprefix}lti_user WHERE email = :EMAIL LIMIT 1",
+                array(':EMAIL' => $email)
+            );
+            $user_row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            
+            if ($user_row) {
+                $user_id = $user_row['user_id'] + 0;
+                $user_key = $user_row['user_key'];
+                
+                // Update user info and login time
+                $PDOX->queryDie(
+                    "UPDATE {$CFG->dbprefix}lti_user 
+                     SET displayname = :DN, login_at = NOW(), ipaddr = :IP 
+                     WHERE user_id = :ID",
+                    array(
+                        ':DN' => $displayname,
+                        ':ID' => $user_id,
+                        ':IP' => U::get($_SERVER, 'REMOTE_ADDR', '127.0.0.1')
+                    )
+                );
+            } else {
+                // Create new test user
+                $stmt = $PDOX->queryReturnError(
+                    "INSERT INTO {$CFG->dbprefix}lti_user
+                    (user_sha256, user_key, key_id, email, displayname, created_at, updated_at, login_at, ipaddr) ".
+                    "VALUES ( :SHA, :UKEY, :KEY, :EMAIL, :DN, NOW(), NOW(), NOW(), :IP )",
+                    array(
+                        ':SHA' => $userSHA,
+                        ':UKEY' => $user_key,
+                        ':KEY' => $key_id,
+                        ':EMAIL' => $email,
+                        ':DN' => $displayname,
+                        ':IP' => U::get($_SERVER, 'REMOTE_ADDR', '127.0.0.1')
+                    )
+                );
+                
+                if (!$stmt->success) {
+                    $error = 'Error creating test user: ' . json_encode($stmt->errorInfo);
+                } else {
+                    $user_id = $PDOX->lastInsertId();
+                }
+            }
+            
+            if (!$error && isset($user_id)) {
             // Get or create context (same as GoogleLoginHandler)
             $context_key = false;
             $context_id = false;
@@ -220,6 +270,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $redirect = $CFG->apphome . '/';
             header('Location: ' . $redirect);
             exit;
+            }
         }
     }
 }

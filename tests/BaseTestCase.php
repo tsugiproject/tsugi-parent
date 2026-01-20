@@ -103,9 +103,20 @@ abstract class BaseTestCase
             $configFile = $this->baseDir . '/tsugi/config.php';
             if (file_exists($configFile)) {
                 $configContent = file_get_contents($configFile);
-                // Try to extract adminpw value (basic extraction)
-                if (preg_match('/\$CFG->adminpw\s*=\s*[\'"]([^\'"]+)[\'"]/', $configContent, $matches)) {
-                    $adminPassword = $matches[1];
+                // Try to extract adminpw value (skip commented lines)
+                // Parse line by line to skip lines starting with //
+                $lines = explode("\n", $configContent);
+                foreach ($lines as $line) {
+                    $line = trim($line);
+                    // Skip empty lines and commented lines
+                    if (empty($line) || strpos($line, '//') === 0) {
+                        continue;
+                    }
+                    // Check if this line contains the adminpw assignment
+                    if (preg_match('/\$CFG->adminpw\s*=\s*[\'"]([^\'"]+)[\'"]/', $line, $matches)) {
+                        $adminPassword = $matches[1];
+                        // Continue to find the last (active) assignment
+                    }
                 }
             }
             
@@ -116,6 +127,12 @@ abstract class BaseTestCase
         
         // Navigate to test user login page
         $loginUrl = $this->baseUrl . '/tests/login_test_user.php';
+        echo "🔐 Setting up test user:\n";
+        echo "   Login URL: $loginUrl\n";
+        echo "   Email: $email\n";
+        echo "   Password being sent: '" . $adminPassword . "' (length: " . strlen($adminPassword) . ")\n";
+        echo "   Config file: " . $this->baseDir . "/tsugi/config.php\n";
+        
         $crawler = $client->request('GET', $loginUrl);
         
         // Wait for form to load
