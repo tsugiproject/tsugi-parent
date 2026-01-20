@@ -22,7 +22,12 @@
    ```
    This will install ChromeDriver to `tests/drivers/chromedriver`
 
-4. **Local server running**
+4. **Enable test user login** in `tsugi/config.php`:
+   ```php
+   $CFG->setExtension('qa_allow_test_users', true);
+   ```
+
+5. **Local server running**
    - Make sure your server is running at `http://localhost:8888/tsugi-parent/`
    - Test it in your browser first
 
@@ -114,7 +119,8 @@ tests/
 ├── SmokeTest.php          # Quick smoke test (run this!)
 ├── BaseTestCase.php       # Base class with utilities
 ├── run-all.php            # Run all test suites
-├── Py4ETests/             # Main tsugi-parent tests
+├── LessonsTests/          # Lessons tests
+├── AdminTests/            # Admin tests
 ├── ToolsTests/            # Tools folder tests
 └── ModTests/              # Mod folder tests
 ```

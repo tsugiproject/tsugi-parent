@@ -122,7 +122,8 @@ php tests/SmokeTest.php --watch
 
 Run specific test suites:
 ```bash
-php tests/Py4ETests/LessonsTest.php
+php tests/LessonsTests/LessonsTest.php
+php tests/AdminTests/AdminSmokeTest.php  # Note: Requires Google OAuth to be disabled
 php tests/ToolsTests/PythonAutoTest.php
 php tests/ToolsTests/AllToolsSmokeTest.php
 ```
@@ -139,7 +140,24 @@ Before running tests, ensure:
    ```
    This installs ChromeDriver to `tests/drivers/chromedriver`.
 3. Chrome/Chromium is installed on your system
-4. Your local server is running (default: `http://localhost:8888`)
+4. Enable test user login in `tsugi/config.php`:
+   ```php
+   $CFG->setExtension('qa_allow_test_users', true);
+   ```
+   This allows the test suite to create test users for automated testing.
+5. **For admin tests**: 
+   - Set the admin password in `tsugi/config.php`:
+     ```php
+     $CFG->adminpw = 'short';  // Set your admin password here
+     ```
+     This is the password used to log into `/tsugi/admin`. The default is `'short'`.
+   - Disable Google OAuth login in `tsugi/config.php`:
+     ```php
+     // Comment out or disable Google OAuth for admin tests
+     // $CFG->google_client_id = '...';
+     ```
+     Admin tests require password-based authentication, not OAuth.
+6. Your local server is running (default: `http://localhost:8888`)
 
 For detailed testing documentation, setup instructions, and troubleshooting, see:
 * [tests/README.md](tests/README.md) - Complete testing guide

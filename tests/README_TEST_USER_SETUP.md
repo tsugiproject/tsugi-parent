@@ -56,7 +56,14 @@ $this->setupTestUser(
 
 ## Security
 
-- The setup endpoint (`setup-test-user.php`) is only accessible from:
+**Important**: Test user login must be enabled in `tsugi/config.php`:
+```php
+$CFG->setExtension('qa_allow_test_users', true);
+```
+
+Without this setting, test user login will be disabled and tests will fail.
+
+- The setup endpoint (`login_test_user.php`) is only accessible from:
   - `127.0.0.1` (localhost)
   - `::1` (IPv6 localhost)
   - `192.168.*.*` (local network)

@@ -15,10 +15,10 @@ Tests the Tsugi admin interface at `/tsugi/admin`:
 
 ```bash
 # Normal mode
-php tests/Py4ETests/AdminSmokeTest.php
+php tests/AdminTests/AdminSmokeTest.php
 
 # Watch mode (visible browser)
-php tests/Py4ETests/AdminSmokeTest.php --watch
+php tests/AdminTests/AdminSmokeTest.php --watch
 ```
 
 ## What Gets Tested

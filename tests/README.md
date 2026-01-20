@@ -33,7 +33,13 @@ This will install ChromeDriver to `tests/drivers/chromedriver`.
 which google-chrome-stable || which chromium || which chromium-browser || which google-chrome
 ```
 
-4. Ensure your local server is running at `http://localhost:8888/tsugi-parent/`
+4. Enable test user login in `tsugi/config.php`:
+   ```php
+   $CFG->setExtension('qa_allow_test_users', true);
+   ```
+   This allows the test suite to create test users for automated testing.
+
+5. Ensure your local server is running at `http://localhost:8888/tsugi-parent/`
 
 ## Running Tests
 
@@ -59,7 +65,8 @@ php tests/run-all.php
 
 ### Run specific test suite:
 ```bash
-php tests/Py4ETests/LessonsTest.php
+php tests/LessonsTests/LessonsTest.php
+php tests/AdminTests/AdminSmokeTest.php
 php tests/ToolsTests/PythonAutoTest.php
 php tests/ToolsTests/ToolsTestHarnessTest.php
 php tests/ToolsTests/AipaperTest.php  # Example: test specific tool
@@ -94,10 +101,11 @@ tests/
 ├── SmokeTest.php               # Quick smoke test - run before commits
 ├── run-all.php                 # Run all test suites
 ├── BaseTestCase.php            # Base test class with common utilities
-├── Py4ETests/                  # Tests for main tsugi-parent functionality
-│   ├── LessonsTest.php         # Test lessons rendering and navigation
-│   ├── HomePageTest.php        # Test homepage functionality
-│   └── MaterialsTest.php       # Test materials page
+├── LessonsTests/               # Tests for lessons functionality
+│   └── LessonsTest.php         # Test lessons rendering and navigation
+├── AdminTests/                 # Tests for admin functionality
+│   ├── AdminSmokeTest.php      # Test admin interface
+│   └── README_ADMIN_TEST.md     # Admin test documentation
 ├── ToolsTests/                  # Tests for tools in /tools folder
 │   ├── PythonAutoTest.php      # Test pythonauto tool
 │   ├── PythonDataTest.php      # Test python-data tool
@@ -112,13 +120,19 @@ tests/
 ### Smoke Tests
 Quick tests that verify basic functionality is working. Run these before every commit.
 
-### Tsugi-Parent Tests
-Tests for the main tsugi-parent application:
+### Lessons Tests
+Tests for lessons functionality:
 - Lessons rendering (with and without items array)
 - Navigation between modules
 - Progress badges
 - LTI launches
 - Discussions
+
+### Admin Tests
+Tests for admin interface:
+- Admin login and authentication
+- Admin UI navigation
+- Admin modal popups
 
 ### Tools Tests
 Tests for individual tools in `/tools`:

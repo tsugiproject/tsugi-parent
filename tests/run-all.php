@@ -25,8 +25,8 @@ if ($watchMode) {
 }
 
 require_once __DIR__ . '/SmokeTest.php';
-require_once __DIR__ . '/Py4ETests/LessonsTest.php';
-require_once __DIR__ . '/Py4ETests/AdminSmokeTest.php';
+require_once __DIR__ . '/LessonsTests/LessonsTest.php';
+require_once __DIR__ . '/AdminTests/AdminSmokeTest.php';
 require_once __DIR__ . '/ToolsTests/PythonAutoTest.php';
 require_once __DIR__ . '/ToolsTests/ToolsTestHarnessTest.php';
 require_once __DIR__ . '/ToolsTests/AipaperTest.php';
@@ -49,7 +49,7 @@ try {
     $exitCode = 1;
 }
 
-echo "\n--- Tsugi-Parent Tests ---\n";
+echo "\n--- Lessons Tests ---\n";
 $lessonsTest = new LessonsTest();
 try {
     $lessonsTest->testLessonsListRenders();

@@ -17,7 +17,7 @@ This document outlines the test structure for comprehensive testing of the tsugi
 - ✓ Tools directory accessible
 - ✓ Mod directory accessible
 
-### 2. Tsugi-Parent Core Tests (`Py4ETests/`)
+### 2. Lessons Tests (`LessonsTests/`)
 
 #### LessonsTest.php
 - Lessons list page renders
@@ -32,18 +32,15 @@ This document outlines the test structure for comprehensive testing of the tsugi
 - LTI launches (if logged in)
 - Discussion links (if logged in)
 
-#### HomePageTest.php (to be created)
-- Homepage loads correctly
-- Navigation menu works
-- Links are valid
-- Responsive design (mobile/desktop)
+### 3. Admin Tests (`AdminTests/`)
 
-#### MaterialsTest.php (to be created)
-- Materials page loads
-- Download links work
-- OER export works
+#### AdminSmokeTest.php
+- Admin login page loads
+- Admin password authentication
+- Admin UI navigation
+- Admin modal popups
 
-### 3. Tools Tests (`ToolsTests/`)
+### 4. Tools Tests (`ToolsTests/`)
 
 #### ToolsTestHarnessTest.php ⭐
 **This is the main way to test ALL tools (including mod tools)**
@@ -73,7 +70,7 @@ This document outlines the test structure for comprehensive testing of the tsugi
 - Database exercises work
 - Query interface works
 
-### 4. Tools Test Harness (`ToolsTests/ToolsTestHarnessTest.php`)
+### 5. Tools Test Harness (`ToolsTests/ToolsTestHarnessTest.php`)
 
 **Important**: Mod tools are NOT tested directly via `/mod` URLs. Instead, they are tested through the tools test harness at `/tools` (which goes to `/tsugi/store/test`).
 
@@ -104,7 +101,8 @@ php tests/run-all.php
 php tests/run-all.php --verbose
 
 # Run specific test suite
-php tests/Py4ETests/LessonsTest.php
+php tests/LessonsTests/LessonsTest.php
+php tests/AdminTests/AdminSmokeTest.php
 ```
 
 ## Test Data Requirements
