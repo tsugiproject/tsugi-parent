@@ -16,10 +16,11 @@
 
 3. **ChromeDriver installed** (for browser automation)
    ```bash
-   cd /Users/csev/htdocs/tsugi-parent/tsugi
-   vendor/bin/bdi detect drivers
+   cd /Users/csev/htdocs/tsugi-parent
+   mkdir -p tests/drivers
+   ./tests/vendor/bin/bdi detect tests/drivers
    ```
-   This will install ChromeDriver to `tsugi/drivers/chromedriver`
+   This will install ChromeDriver to `tests/drivers/chromedriver`
 
 4. **Local server running**
    - Make sure your server is running at `http://localhost:8888/tsugi-parent/`

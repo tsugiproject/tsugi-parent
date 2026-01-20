@@ -23,7 +23,7 @@ class PythonAutoTest extends BaseTestCase
         
         // Tool likely requires login, so we'll just check it doesn't 500
         try {
-            $crawler = $client->request('GET', $this->baseUrl . '/tools/pythonauto');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/pythonauto');
             $statusCode = $client->getResponse()->getStatusCode();
             
             // Should either load successfully or redirect to login

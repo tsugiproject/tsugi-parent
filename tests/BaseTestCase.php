@@ -141,9 +141,9 @@ abstract class BaseTestCase
     protected function getPantherClient(): Client
     {
         // Get ChromeDriver path
-        $chromedriverPath = realpath(__DIR__ . '/../tsugi/drivers/chromedriver');
+        $chromedriverPath = realpath(__DIR__ . '/drivers/chromedriver');
         if (!$chromedriverPath || !file_exists($chromedriverPath)) {
-            throw new \RuntimeException("ChromeDriver not found at: " . __DIR__ . '/../tsugi/drivers/chromedriver');
+            throw new \RuntimeException("ChromeDriver not found at: " . __DIR__ . '/drivers/chromedriver');
         }
         
         // Check if we should run in watch mode (visible browser)

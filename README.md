@@ -131,8 +131,15 @@ php tests/ToolsTests/AllToolsSmokeTest.php
 
 Before running tests, ensure:
 1. Dependencies are installed: `cd tests && composer install`
-2. Chrome/Chromium is installed on your system
-3. Your local server is running (default: `http://localhost:8888`)
+2. ChromeDriver is installed (required for browser automation):
+   ```bash
+   cd /Users/csev/htdocs/tsugi-parent
+   mkdir -p tests/drivers
+   ./tests/vendor/bin/bdi detect tests/drivers
+   ```
+   This installs ChromeDriver to `tests/drivers/chromedriver`.
+3. Chrome/Chromium is installed on your system
+4. Your local server is running (default: `http://localhost:8888`)
 
 For detailed testing documentation, setup instructions, and troubleshooting, see:
 * [tests/README.md](tests/README.md) - Complete testing guide

@@ -1,6 +1,9 @@
 screenshots/
 *.log
 
+# Browser drivers (platform-specific binaries)
+drivers/
+
 # Config files that might contain sensitive data
 config.local.php
 credentials.php

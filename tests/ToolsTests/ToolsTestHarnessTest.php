@@ -2,7 +2,7 @@
 /**
  * Tests for the tools test harness
  * 
- * The test harness at /tools (which goes to /tsugi/store/test) provides
+ * The test harness at /tsugi/store/ provides
  * a way to test all installed tools (including mod tools) using three
  * built-in test accounts:
  * - Jane Instructor
@@ -31,7 +31,7 @@ class ToolsTestHarnessTest extends BaseTestCase
         $client = $this->getPantherClient();
         
         try {
-            $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tools');
+            $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tsugi/store/');
             
             // In watch mode, add a small delay
             if ($this->isWatchMode()) {
@@ -58,7 +58,7 @@ class ToolsTestHarnessTest extends BaseTestCase
         $client = $this->getPantherClient();
         
         try {
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -92,7 +92,7 @@ class ToolsTestHarnessTest extends BaseTestCase
         $client = $this->getPantherClient();
         
         try {
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -128,7 +128,7 @@ class ToolsTestHarnessTest extends BaseTestCase
         $client = $this->getPantherClient();
         
         try {
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);

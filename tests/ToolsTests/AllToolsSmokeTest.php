@@ -2,7 +2,7 @@
 /**
  * Smoke test for all tools
  * 
- * Discovers all tools from /tools (store listing) and runs BaseToolTest on each.
+ * Discovers all tools from /tsugi/store/ (store listing) and runs BaseToolTest on each.
  * This provides comprehensive coverage of all installed tools.
  */
 
@@ -41,8 +41,8 @@ class AllToolsSmokeTest extends BaseTestCase
             
             // Register shutdown function to ensure cleanup
             register_shutdown_function($clientQuit);
-            // Navigate to /tools (redirects to /tsugi/store/)
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            // Navigate to /tsugi/store/
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             sleep(1);
             
             // Find all tool cards (div.app)

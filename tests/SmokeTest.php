@@ -86,9 +86,9 @@ class SmokeTest extends BaseTestCase
     {
         $client = $this->getPantherClient();
         
-        // Test the tools test harness at /tools (which goes to /tsugi/store/test)
+        // Test the tools store at /tsugi/store/
         try {
-            $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tools');
+            $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tsugi/store/');
             
             // In watch mode, add a small delay so you can see the page
             if ($this->isWatchMode()) {

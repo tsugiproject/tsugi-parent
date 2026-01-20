@@ -62,8 +62,8 @@ abstract class BaseToolTest extends BaseTestCase
                 throw new \Exception("toolKey must be set in test class");
             }
             
-            // Navigate to /tools (redirects to /tsugi/store/)
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            // Navigate to /tsugi/store/
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -105,8 +105,8 @@ abstract class BaseToolTest extends BaseTestCase
      */
     protected function navigateToToolDetails($client)
     {
-        // Navigate to /tools (redirects to /tsugi/store/)
-        $crawler = $client->request('GET', $this->baseUrl . '/tools');
+        // Navigate to /tsugi/store/
+        $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
         sleep(1);
         
         // Find tool card (div.app) containing our tool

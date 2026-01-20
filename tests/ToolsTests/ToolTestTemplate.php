@@ -42,7 +42,7 @@ class ToolTestTemplate extends BaseTestCase
         
         try {
             // Navigate to test harness
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -77,7 +77,7 @@ class ToolTestTemplate extends BaseTestCase
         
         try {
             // Navigate to test harness
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -159,7 +159,7 @@ class ToolTestTemplate extends BaseTestCase
         
         try {
             // Navigate to test harness
-            $crawler = $client->request('GET', $this->baseUrl . '/tools');
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
             sleep(1);
             
             // TODO: Add tool-specific test steps here:

@@ -19,13 +19,21 @@ cd /Users/csev/htdocs/tsugi-parent/tests
 composer install
 ```
 
-2. Make sure Chrome/Chromium is installed on your Mac:
+2. Install ChromeDriver (required for browser automation):
+```bash
+cd /Users/csev/htdocs/tsugi-parent
+mkdir -p tests/drivers
+./tests/vendor/bin/bdi detect tests/drivers
+```
+This will install ChromeDriver to `tests/drivers/chromedriver`.
+
+3. Make sure Chrome/Chromium is installed on your Mac:
 ```bash
 # Check if Chrome is installed
 which google-chrome-stable || which chromium || which chromium-browser || which google-chrome
 ```
 
-3. Ensure your local server is running at `http://localhost:8888/tsugi-parent/`
+4. Ensure your local server is running at `http://localhost:8888/tsugi-parent/`
 
 ## Running Tests
 
