@@ -33,8 +33,8 @@ class AdminSmokeTest extends BaseTestCase
     {
         if ($this->adminPassword === null) {
             // Load config to get admin password
-            // Read config file to extract adminpw
-            $configPath = __DIR__ . '/../../tsugi/config.php';
+            // Read config file to extract adminpw (in base directory's tsugi folder)
+            $configPath = $this->baseDir . '/tsugi/config.php';
             if (file_exists($configPath)) {
                 // Read config file to extract adminpw
                 $configContent = file_get_contents($configPath);

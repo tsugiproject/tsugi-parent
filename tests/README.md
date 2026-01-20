@@ -39,7 +39,22 @@ which google-chrome-stable || which chromium || which chromium-browser || which 
    ```
    This allows the test suite to create test users for automated testing.
 
-5. Ensure your local server is running at `http://localhost:8888/tsugi-parent/`
+5. **Configure test target** (optional):
+   By default, tests target `http://localhost:8888/tsugi-parent/` (based on the directory name).
+   To test a different project/server, set environment variables:
+   ```bash
+   # Test py4e project
+   export TEST_BASE_DIR=/Users/csev/htdocs/py4e
+   export TEST_BASE_URL=http://localhost:8888/py4e
+   
+   # Or test a different server
+   export TEST_BASE_DIR=/Users/csev/htdocs/my-project
+   export TEST_BASE_URL=http://localhost:8888/my-project
+   ```
+   The `TEST_BASE_DIR` should point to the project root (containing the `tsugi/` folder).
+   The `TEST_BASE_URL` should be the full URL where the project is served.
+
+6. Ensure your local server is running at the configured base URL
 
 ## Running Tests
 

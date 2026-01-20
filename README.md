@@ -157,7 +157,16 @@ Before running tests, ensure:
      // $CFG->google_client_id = '...';
      ```
      Admin tests require password-based authentication, not OAuth.
-6. Your local server is running (default: `http://localhost:8888`)
+6. **Configure test target** (optional):
+   By default, tests target `http://localhost:8888/tsugi-parent/`. To test a different project:
+   ```bash
+   export TEST_BASE_DIR=/Users/csev/htdocs/py4e
+   export TEST_BASE_URL=http://localhost:8888/py4e
+   ```
+   The `TEST_BASE_DIR` should point to the project root (containing `tsugi/` folder).
+   The `TEST_BASE_URL` should be the full URL where the project is served.
+
+7. Your local server is running (default: `http://localhost:8888`)
 
 For detailed testing documentation, setup instructions, and troubleshooting, see:
 * [tests/README.md](tests/README.md) - Complete testing guide

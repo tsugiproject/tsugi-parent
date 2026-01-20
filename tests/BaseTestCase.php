@@ -35,13 +35,47 @@ use Symfony\Component\Panther\Client;
  */
 abstract class BaseTestCase
 {
-    protected $baseUrl = 'http://localhost:8888/tsugi-parent';
+    protected $baseUrl;
+    protected $baseDir;
     
     /**
      * Constructor
      */
     public function __construct()
     {
+        // Get base directory from environment or default to parent of tests directory
+        $this->baseDir = getenv('TEST_BASE_DIR');
+        if (empty($this->baseDir)) {
+            // Default: parent directory of tests (e.g., tsugi-parent)
+            $this->baseDir = realpath(__DIR__ . '/..');
+        } else {
+            // Resolve relative paths
+            $this->baseDir = realpath($this->baseDir);
+        }
+        
+        // Get base URL from environment or construct from base directory name
+        $this->baseUrl = getenv('TEST_BASE_URL');
+        if (empty($this->baseUrl)) {
+            // Default: construct URL from directory name
+            $dirName = basename($this->baseDir);
+            $this->baseUrl = 'http://localhost:8888/' . $dirName;
+        }
+        
+        // Print configuration at startup (only once per test class)
+        static $printed = false;
+        if (!$printed) {
+            echo "\n📋 Test Configuration:\n";
+            echo "   Base Directory: {$this->baseDir}\n";
+            echo "   Base URL: {$this->baseUrl}\n";
+            echo "   Config File: {$this->baseDir}/tsugi/config.php\n";
+            if (file_exists($this->baseDir . '/tsugi/config.php')) {
+                echo "   ✓ Config file found\n";
+            } else {
+                echo "   ⚠ Config file not found\n";
+            }
+            echo "\n";
+            $printed = true;
+        }
     }
     
     /**
@@ -65,8 +99,8 @@ abstract class BaseTestCase
     {
         // Get admin password from config if not provided
         if ($adminPassword === null) {
-            // Try to read from config.php
-            $configFile = __DIR__ . '/../tsugi/config.php';
+            // Try to read from config.php (in base directory's tsugi folder)
+            $configFile = $this->baseDir . '/tsugi/config.php';
             if (file_exists($configFile)) {
                 $configContent = file_get_contents($configFile);
                 // Try to extract adminpw value (basic extraction)

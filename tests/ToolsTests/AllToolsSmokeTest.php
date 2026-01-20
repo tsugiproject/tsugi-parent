@@ -18,7 +18,7 @@ require_once __DIR__ . '/BaseToolTest.php';
 
 class AllToolsSmokeTest extends BaseTestCase
 {
-    protected $baseUrl = 'http://localhost:8888/tsugi-parent';
+    // baseUrl is now set in BaseTestCase constructor from environment or directory name
     
     /**
      * Discover all tools from the store listing
