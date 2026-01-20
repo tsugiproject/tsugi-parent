@@ -38,7 +38,24 @@ class AdminSmokeTest extends BaseTestCase
             if (file_exists($configPath)) {
                 // Read config file to extract adminpw
                 $configContent = file_get_contents($configPath);
-                if (preg_match('/\$CFG->adminpw\s*=\s*[\'"]([^\'"]+)[\'"]/', $configContent, $matches)) {
+                
+                // Remove single-line comments (// and #)
+                $lines = explode("\n", $configContent);
+                $cleanLines = [];
+                foreach ($lines as $line) {
+                    // Remove // comments (but preserve strings that contain //)
+                    $line = preg_replace('/(?<!["\'])\/\/.*$/', '', $line);
+                    // Remove # comments (but preserve strings that contain #)
+                    $line = preg_replace('/(?<!["\'])#.*$/', '', $line);
+                    $cleanLines[] = $line;
+                }
+                $cleanContent = implode("\n", $cleanLines);
+                
+                // Remove multi-line comments /* */
+                $cleanContent = preg_replace('/\/\*.*?\*\//s', '', $cleanContent);
+                
+                // Now search for adminpw (must be at start of line or after whitespace, not in comment)
+                if (preg_match('/^\s*\$CFG->adminpw\s*=\s*[\'"]([^\'"]+)[\'"]/m', $cleanContent, $matches)) {
                     $this->adminPassword = $matches[1];
                 }
             }
