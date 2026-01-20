@@ -94,3 +94,45 @@ You can get commercial support for Tsugi at
 
 * <a href="https://www.learnxp.com/" target="_blank">Learning Experiences</a>
 
+Testing
+-------
+
+This project includes a comprehensive browser automation test suite using Symfony Panther. 
+The tests are located in the `tests/` directory.
+
+### Quick Start
+
+Run a quick smoke test to verify basic functionality:
+```bash
+cd /Users/csev/htdocs/tsugi-parent
+php tests/SmokeTest.php
+```
+
+Run all tests:
+```bash
+php tests/run-all.php
+```
+
+Run tests in watch mode (shows browser window):
+```bash
+php tests/SmokeTest.php --watch
+# or use the convenience script:
+./tests/run-watch.sh
+```
+
+Run specific test suites:
+```bash
+php tests/Py4ETests/LessonsTest.php
+php tests/ToolsTests/PythonAutoTest.php
+php tests/ToolsTests/AllToolsSmokeTest.php
+```
+
+### Setup
+
+Before running tests, ensure:
+1. Dependencies are installed: `cd tests && composer install`
+2. Chrome/Chromium is installed on your system
+3. Your local server is running (default: `http://localhost:8888`)
+
+For detailed testing documentation, setup instructions, and troubleshooting, see:
+* [tests/README.md](tests/README.md) - Complete testing guide

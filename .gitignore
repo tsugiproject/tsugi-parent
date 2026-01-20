@@ -1,5 +1,6 @@
 *.swp
 tsugi
 mod
+tests/vendor
 
 
