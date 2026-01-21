@@ -42,8 +42,12 @@ class AllToolsSmokeTest extends BaseTestCase
             // Register shutdown function to ensure cleanup
             register_shutdown_function($clientQuit);
             // Navigate to /tsugi/store/
-            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
+            $storeUrl = $this->baseUrl . '/tsugi/store/';
+            echo "   🔍 Navigating to: {$storeUrl}\n";
+            $crawler = $client->request('GET', $storeUrl);
             sleep(1);
+            $currentUrl = $client->getCurrentURL();
+            echo "   📍 Current URL after navigation: {$currentUrl}\n";
             
             // Find all tool cards (div.app)
             $appCards = $crawler->filter('div.app');
@@ -139,6 +143,8 @@ class AllToolsSmokeTest extends BaseTestCase
         $testClass = new class($toolKey, $toolName) extends BaseToolTest {
             public function __construct($toolKey, $toolName = null)
             {
+                // Call parent constructor to initialize baseUrl and baseDir
+                parent::__construct();
                 $this->toolKey = $toolKey;
                 $this->toolName = $toolName ?: $toolKey;
             }
@@ -266,6 +272,8 @@ class AllToolsSmokeTest extends BaseTestCase
         $testClass = new class($toolKey, $toolName) extends BaseToolTest {
             public function __construct($toolKey, $toolName = null)
             {
+                // Call parent constructor to initialize baseUrl and baseDir
+                parent::__construct();
                 $this->toolKey = $toolKey;
                 $this->toolName = $toolName ?: $toolKey;
             }

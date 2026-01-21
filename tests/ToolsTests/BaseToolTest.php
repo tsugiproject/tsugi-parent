@@ -51,6 +51,130 @@ abstract class BaseToolTest extends BaseTestCase
     ];
     
     /**
+     * Rewrite a URL to include the base path if it's an absolute path
+     * Handles absolute paths (starting with /), relative paths, and full URLs
+     * 
+     * @param string $href The href URL to rewrite
+     * @param Client $client Panther client (for getting current URL if needed)
+     * @return string Full URL with base path included
+     */
+    protected function rewriteUrl($href, $client = null)
+    {
+        if (empty($href)) {
+            return $href;
+        }
+        
+        // Parse the href to determine its type
+        $hrefParts = parse_url($href);
+        
+        // If href is an absolute path (starts with / but not //), prepend base URL
+        if (strpos($href, '/') === 0 && strpos($href, '//') !== 0 && !isset($hrefParts['scheme'])) {
+            // Rewrite absolute path to include base URL
+            return $this->baseUrl . $href;
+        } elseif (isset($hrefParts['scheme'])) {
+            // Full URL (http://...), use as-is
+            return $href;
+        } else {
+            // Relative URL, resolve relative to current page
+            if ($client) {
+                $currentUrl = $client->getCurrentURL();
+                if ($currentUrl) {
+                    // Use PHP's built-in URL resolution
+                    // If current URL is http://localhost:8888/tsugi-parent/tsugi/store/
+                    // and href is details/aipaper, we want http://localhost:8888/tsugi-parent/tsugi/store/details/aipaper
+                    
+                    // Ensure current URL ends with / if it's a directory
+                    $baseUrl = rtrim($currentUrl, '/') . '/';
+                    
+                    // Resolve relative URL
+                    // Remove any leading ./ from href
+                    $href = ltrim($href, './');
+                    
+                    // Simple resolution: append href to base URL
+                    $resolvedUrl = $baseUrl . $href;
+                    
+                    // Normalize: remove any double slashes (but keep :// for scheme)
+                    $resolvedUrl = preg_replace('#([^:])//+#', '$1/', $resolvedUrl);
+                    
+                    return $resolvedUrl;
+                }
+            }
+            // No client available or current URL is null, just prepend base URL
+            return $this->baseUrl . '/' . ltrim($href, '/');
+        }
+    }
+    
+    /**
+     * Navigate to a URL, rewriting absolute paths to include base path
+     * Also verifies that we're on the correct URL after navigation (handles redirects)
+     * 
+     * @param Client $client Panther client
+     * @param string $href URL to navigate to
+     * @return \Symfony\Component\DomCrawler\Crawler
+     */
+    protected function navigateToUrl($client, $href)
+    {
+        $fullUrl = $this->rewriteUrl($href, $client);
+        
+        if (empty($fullUrl)) {
+            throw new \Exception("Cannot navigate to empty URL. Original href: " . var_export($href, true));
+        }
+        
+        // Extract base path from baseUrl (e.g., /tsugi-parent)
+        $basePath = '';
+        if ($this->baseUrl) {
+            $baseUrlParts = parse_url($this->baseUrl);
+            $basePath = isset($baseUrlParts['path']) ? rtrim($baseUrlParts['path'], '/') : '';
+        }
+        
+        // Debug: Show navigation details
+        echo "   🔍 Navigating to: {$fullUrl} (from href: " . var_export($href, true) . ")\n";
+        
+        // Navigate to the URL
+        $crawler = $client->request('GET', $fullUrl);
+        
+        // Wait a moment for any redirects to complete
+        sleep(1);
+        
+        // Verify we're on the correct URL (server might have redirected incorrectly)
+        $currentUrl = $client->getCurrentURL();
+        $currentPath = null;
+        if ($currentUrl) {
+            $currentPath = parse_url($currentUrl, PHP_URL_PATH);
+            echo "   📍 Current URL after navigation: {$currentUrl}\n";
+        } else {
+            echo "   ⚠ Current URL is null after navigation\n";
+        }
+        
+        // If current URL doesn't include the base path, we were redirected incorrectly
+        // Retry navigation using JavaScript to force the correct URL
+        if ($basePath && ($currentPath === null || strpos($currentPath, $basePath) !== 0)) {
+            echo "   ⚠ Redirect detected! Expected path starting with '{$basePath}', but got " . ($currentPath ?? 'null') . "\n";
+            echo "   🔄 Retrying navigation using JavaScript to: {$fullUrl}\n";
+            $driver = $client->getWebDriver();
+            // Use JavaScript navigation to force the correct URL
+            $driver->executeScript("window.location.href = arguments[0];", [$fullUrl]);
+            sleep(2); // Wait longer for JavaScript navigation
+            $crawler = $client->getCrawler();
+            
+            // Verify again
+            $currentUrl = $client->getCurrentURL();
+            $currentPath = null;
+            if ($currentUrl) {
+                $currentPath = parse_url($currentUrl, PHP_URL_PATH);
+                echo "   📍 Current URL after JavaScript navigation: {$currentUrl}\n";
+            } else {
+                echo "   ⚠ Current URL is null after JavaScript navigation\n";
+            }
+            if ($basePath && ($currentPath === null || strpos($currentPath, $basePath) !== 0)) {
+                throw new \Exception("Failed to navigate to correct URL. Expected path starting with '{$basePath}', but got " . ($currentPath ?? 'null'));
+            }
+        }
+        
+        return $crawler;
+    }
+    
+    /**
      * Test that tool appears in store listing
      */
     public function testToolAppearsInStore()
@@ -62,8 +186,8 @@ abstract class BaseToolTest extends BaseTestCase
                 throw new \Exception("toolKey must be set in test class");
             }
             
-            // Navigate to /tsugi/store/
-            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
+            // Navigate to /tsugi/store/ (use helper to handle redirects)
+            $crawler = $this->navigateToUrl($client, '/tsugi/store/');
             
             // Wait for page to load
             sleep(1);
@@ -164,11 +288,24 @@ abstract class BaseToolTest extends BaseTestCase
             throw new \Exception("Details button not found for tool '{$this->toolKey}'");
         }
         
-        // Click Details button
-        $client->click($detailsLink->link());
+        // Get href and rewrite if it's an absolute path (starts with /)
+        // Absolute paths need to include the project base path
+        $href = $detailsLink->attr('href');
+        echo "   🔗 Details link href: " . var_export($href, true) . "\n";
+        if ($href) {
+            // Use helper method to rewrite URL and navigate
+            $crawler = $this->navigateToUrl($client, $href);
+        } else {
+            echo "   ⚠ No href found, clicking link directly\n";
+            // Fallback: click the link (might be a button with onclick)
+            $client->click($detailsLink->link());
+            $crawler = $client->getCrawler();
+            $currentUrl = $client->getCurrentURL();
+            echo "   📍 Current URL after clicking: {$currentUrl}\n";
+        }
         sleep(1);
         
-        return $client->getCrawler();
+        return $crawler;
     }
     
     /**
@@ -218,20 +355,43 @@ abstract class BaseToolTest extends BaseTestCase
         
         // Click Try It button
         $driver = $client->getWebDriver();
+        $crawler = null;
         try {
-            // Try as link first
-            $link = $tryItButton->link();
-            $client->click($link);
+            // Try as link first - get href and rewrite if needed
+            $href = $tryItButton->attr('href');
+            echo "   🔗 Try It button href: " . var_export($href, true) . "\n";
+            if ($href) {
+                // Use helper to rewrite URL and navigate
+                $crawler = $this->navigateToUrl($client, $href);
+            } else {
+                echo "   ⚠ No href found, clicking button directly\n";
+                // No href, try clicking the link directly
+                $link = $tryItButton->link();
+                $client->click($link);
+                $crawler = $client->getCrawler();
+                $currentUrl = $client->getCurrentURL();
+                echo "   📍 Current URL after clicking: {$currentUrl}\n";
+            }
         } catch (\Exception $e) {
             // If not a link, try clicking the element directly via WebDriver
             try {
                 $element = $tryItButton->getElement(0);
                 $driver->executeScript('arguments[0].click();', [$element]);
+                $crawler = $client->getCrawler();
             } catch (\Exception $e2) {
                 // Last resort: submit form if we found one
                 if ($tryItForm) {
                     $form = $tryItForm->form();
+                    // Check if form action needs rewriting
+                    $formAction = $tryItForm->attr('action');
+                    if ($formAction) {
+                        $formAction = $this->rewriteUrl($formAction, $client);
+                        // Create a new form with rewritten action
+                        $formData = [];
+                        $form->getFormNode()->setAttribute('action', $formAction);
+                    }
                     $client->submit($form);
+                    $crawler = $client->getCrawler();
                 } else {
                     throw new \Exception("Could not click Try It button: " . $e->getMessage());
                 }

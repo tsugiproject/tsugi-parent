@@ -217,11 +217,14 @@ abstract class BaseTestCase
         }
         
         // Create Chrome client directly, connecting to existing server
+        // Base URI should be just the domain (Panther doesn't support paths in base URI)
+        // All requests should use full URLs with $this->baseUrl to include the project path
+        $baseUri = 'http://localhost:8888';
         return Client::createChromeClient(
             $chromedriverPath,  // ChromeDriver binary path
             $browserArguments,  // Browser arguments
             [],                 // Manager options
-            'http://localhost:8888'  // Base URI
+            $baseUri            // Base URI (domain only, no path)
         );
     }
     
