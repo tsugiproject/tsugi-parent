@@ -28,7 +28,7 @@ class LessonsTest extends BaseTestCase
             $this->setupTestUser($client);
         }
         
-        $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tsugi/lms/lessons/');
+        $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/lessons/');
         
         // Check for module cards
         $cards = $crawler->filter('.card');
@@ -50,7 +50,7 @@ class LessonsTest extends BaseTestCase
         }
         
         // Load lessons list
-        $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/');
+        $crawler = $client->request('GET', $this->baseUrl . '/lessons/');
         
         // Find first module link
         $moduleLink = $crawler->filter('.card a')->first();
@@ -86,7 +86,7 @@ class LessonsTest extends BaseTestCase
         try {
             // Step 1: Go to lessons list
             echo "   Navigating to lessons list...\n";
-            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/');
+            $crawler = $client->request('GET', $this->baseUrl . '/lessons/');
             sleep(1);
             
             // Step 2: Click on first lesson module
@@ -263,7 +263,7 @@ class LessonsTest extends BaseTestCase
         }
         
         // Load a module that might have items array
-        $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/intro');
+        $crawler = $client->request('GET', $this->baseUrl . '/lessons/intro');
         
         // Check for content lists
         $contentLists = $crawler->filter('.tsugi-lessons-content-list');
@@ -352,7 +352,7 @@ class LessonsTest extends BaseTestCase
      */
     private function testLessonsListRendersWithClient($client, $loggedIn = false)
     {
-        $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/tsugi/lms/lessons/');
+        $crawler = $this->assertPageLoaded($client, $this->baseUrl . '/lessons/');
         
         // Check for module cards
         $cards = $crawler->filter('.card');
@@ -367,7 +367,7 @@ class LessonsTest extends BaseTestCase
     private function testNavigateToModuleWithClient($client, $loggedIn = false)
     {
         // Load lessons list
-        $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/');
+        $crawler = $client->request('GET', $this->baseUrl . '/lessons/');
         
         // Find first module link
         $moduleLink = $crawler->filter('.card a')->first();
@@ -399,7 +399,7 @@ class LessonsTest extends BaseTestCase
         try {
             // Step 1: Go to lessons list
             echo "   Navigating to lessons list...\n";
-            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/');
+            $crawler = $client->request('GET', $this->baseUrl . '/lessons/');
             sleep(1);
             
             // Step 2: Click on first lesson module
@@ -852,7 +852,7 @@ class LessonsTest extends BaseTestCase
     private function testItemsArrayRendersWithClient($client, $loggedIn = false)
     {
         // Load a module that might have items array
-        $crawler = $client->request('GET', $this->baseUrl . '/tsugi/lms/lessons/intro');
+        $crawler = $client->request('GET', $this->baseUrl . '/lessons/intro');
         
         // Check for content lists
         $contentLists = $crawler->filter('.tsugi-lessons-content-list');

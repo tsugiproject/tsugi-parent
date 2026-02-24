@@ -136,7 +136,7 @@ tests/
 Quick tests that verify basic functionality is working. Run these before every commit.
 
 ### Lessons Tests
-Tests for lessons functionality:
+Tests for lessons functionality at `/lessons` (hydrated by koseu.php):
 - Lessons rendering (with and without items array)
 - Navigation between modules
 - Progress badges
