@@ -25,7 +25,7 @@ cd /Users/csev/htdocs/tsugi-parent
 mkdir -p tests/drivers
 ./tests/vendor/bin/bdi detect tests/drivers
 ```
-This will install ChromeDriver to `tests/drivers/chromedriver`.
+This will install ChromeDriver to `tests/drivers/chromedriver`. If you see a version mismatch error after Chrome updates, run `bdi detect` again to update ChromeDriver.
 
 3. Make sure Chrome/Chromium is installed on your Mac:
 ```bash

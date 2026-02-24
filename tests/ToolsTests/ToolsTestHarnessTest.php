@@ -12,11 +12,13 @@
  * Tools are launched via iframes in this test harness.
  */
 
-// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor
+// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor, then tsugi/lib/vendor
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
-} else {
+} elseif (file_exists(__DIR__ . '/../../tsugi/vendor/autoload.php')) {
     require_once __DIR__ . '/../../tsugi/vendor/autoload.php';
+} else {
+    require_once __DIR__ . '/../../tsugi/lib/vendor/autoload.php';
 }
 
 require_once __DIR__ . '/../BaseTestCase.php';
@@ -121,26 +123,30 @@ class ToolsTestHarnessTest extends BaseTestCase
     
     /**
      * Test that test accounts are available
-     * The test harness should provide: Jane Instructor, Sue Student, Jane Student
+     * The test harness at /tsugi/store/test/ provides: Jane Instructor, Sue Student, Ed Student, Anonymous
      */
     public function testTestAccountsAvailable()
     {
         $client = $this->getPantherClient();
         
         try {
-            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/');
+            // Test harness with identity switcher is at /tsugi/store/test/{tool}
+            // Use aipaper as sample tool to load the test page with identity options
+            $crawler = $client->request('GET', $this->baseUrl . '/tsugi/store/test/aipaper');
             
             // Wait for page to load
-            sleep(1);
+            sleep(2);
             
-            // Look for test account indicators
+            // Look for test account indicators (dev-data.php: Jane Instructor, Sue Student, Ed Student)
             $bodyText = $crawler->filter('body')->text();
             
             // Check for common test account names (case insensitive)
             $hasJaneInstructor = stripos($bodyText, 'Jane') !== false && stripos($bodyText, 'Instructor') !== false;
             $hasSueStudent = stripos($bodyText, 'Sue') !== false && stripos($bodyText, 'Student') !== false;
+            $hasEdStudent = stripos($bodyText, 'Ed') !== false && stripos($bodyText, 'Student') !== false;
+            $hasIdentitySwitch = stripos($bodyText, 'identity') !== false || stripos($bodyText, 'Identity') !== false;
             
-            if ($hasJaneInstructor || $hasSueStudent) {
+            if ($hasJaneInstructor || $hasSueStudent || $hasEdStudent || $hasIdentitySwitch) {
                 echo "✓ Test accounts appear to be available\n";
             } else {
                 echo "⚠ Test account indicators not found (may be using different UI)\n";

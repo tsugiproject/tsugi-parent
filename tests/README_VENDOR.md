@@ -23,18 +23,20 @@ This will create `tests/vendor/` with:
 
 ## How It Works
 
-All test files check for `tests/vendor/autoload.php` first, then fall back to `tsugi/vendor/autoload.php` if needed:
+All test files check for `tests/vendor/autoload.php` first, then fall back to `tsugi/vendor/autoload.php`, then `tsugi/lib/vendor/autoload.php`:
 
 ```php
-// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor
+// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor, then tsugi/lib/vendor
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
-} else {
+} elseif (file_exists(__DIR__ . '/../../tsugi/vendor/autoload.php')) {
     require_once __DIR__ . '/../../tsugi/vendor/autoload.php';
+} else {
+    require_once __DIR__ . '/../../tsugi/lib/vendor/autoload.php';
 }
 ```
 
-This ensures tests work whether dependencies are in `tests/vendor` or `tsugi/vendor`.
+This ensures tests work whether dependencies are in `tests/vendor`, `tsugi/vendor`, or `tsugi/lib/vendor` (monorepo layout).
 
 ## Updating Dependencies
 

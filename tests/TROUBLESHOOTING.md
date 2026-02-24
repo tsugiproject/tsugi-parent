@@ -2,6 +2,20 @@
 
 ## Common Issues
 
+### ChromeDriver Version Mismatch
+
+**Error**: `session not created: This version of ChromeDriver only supports Chrome version X. Current browser version is Y`
+
+**Cause**: Chrome browser auto-updates, but ChromeDriver does not. The versions must match.
+
+**Solution**: Update ChromeDriver to match your Chrome version:
+```bash
+cd /path/to/tsugi-parent
+./tests/vendor/bin/bdi detect tests/drivers
+```
+
+This installs the correct ChromeDriver for your installed Chrome to `tests/drivers/chromedriver`.
+
 ### Port 9515 Already in Use
 
 **Error**: `The port 9515 is already in use`

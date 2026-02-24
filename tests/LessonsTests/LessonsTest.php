@@ -3,11 +3,13 @@
  * Tests for Lessons functionality
  */
 
-// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor
+// Load Composer autoloader - prefer tests/vendor, fallback to tsugi/vendor, then tsugi/lib/vendor
 if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
     require_once __DIR__ . '/../vendor/autoload.php';
-} else {
+} elseif (file_exists(__DIR__ . '/../../tsugi/vendor/autoload.php')) {
     require_once __DIR__ . '/../../tsugi/vendor/autoload.php';
+} else {
+    require_once __DIR__ . '/../../tsugi/lib/vendor/autoload.php';
 }
 
 require_once __DIR__ . '/../BaseTestCase.php';
