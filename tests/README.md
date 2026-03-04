@@ -130,6 +130,17 @@ tests/
 │                                 # Uses built-in accounts: Jane Instructor, Sue Student, Jane Student
 ```
 
+## Routing (koseu.php)
+
+The `tsugi/lms` folder has been removed. Routes are now served via `.htaccess` and `koseu.php` at the project root:
+
+| Old path (removed) | New path |
+|-------------------|----------|
+| `/tsugi/lms/lessons` | `/lessons` |
+| `/tsugi/lms/login` | `/login` |
+
+The store, admin, and other tsugi endpoints remain at `/tsugi/store`, `/tsugi/admin`, etc.
+
 ## Test Organization
 
 ### Smoke Tests

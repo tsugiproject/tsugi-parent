@@ -9,7 +9,7 @@ Tests the Tsugi admin interface at `/tsugi/admin`:
 
 ## Prerequisites
 
-**Note**: If Google OAuth is enabled in `config.php`, the admin gate will redirect to `/tsugi/login.php` for Google authentication. You may need to log in via Google first, or disable Google OAuth for testing.
+**Note**: If Google OAuth is enabled in `config.php`, the admin gate will redirect to `/login` for Google authentication. You may need to log in via Google first, or disable Google OAuth for testing.
 
 ## Running the Test
 
